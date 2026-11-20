@@ -66,6 +66,8 @@ Bấm biểu tượng **Vi** trên thanh menu, chọn **Gỡ cài đặt VietIME
 - **Gỡ cài đặt:** gỡ bộ gõ, giữ lại tuỳ chọn.
 - **Gỡ sạch:** gỡ bộ gõ và xoá luôn tuỳ chọn.
 
-## Ghi chú
+## Giấy phép
+
+VietIME phát hành theo [giấy phép MIT](LICENSE). Bạn được tự do dùng, sửa và phân phối lại, kể cả cho mục đích thương mại, miễn là giữ lại thông báo bản quyền.
 
 "UniKey" là tên của tác giả Phạm Kim Long. VietIME là một dự án độc lập, viết mới hoàn toàn.
