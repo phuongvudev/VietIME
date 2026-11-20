@@ -1,0 +1,19 @@
+# VietIME
+
+> VietIME là bộ gõ tiếng Việt miễn phí cho macOS (macOS 12+, Apple Silicon và Intel), hỗ trợ Telex và VNI. Điểm khác biệt: không gạch chân khi gõ (thay chữ trực tiếp qua InputMethodKit) nên gõ code trong VS Code, Cursor, Xcode, JetBrains vẫn giữ được gợi ý (suggestion) của editor; tự giữ nguyên từ khoá/tiếng Anh (class, useEffect, if, max) ở code nhưng vẫn gõ tiếng Việt trong comment và chuỗi; sửa dấu tại chỗ; gõ tự do dấu ở cuối từ. VietIME is a free Vietnamese input method (IME) for macOS supporting Telex and VNI, designed for developers.
+
+Cài đặt: tải `VietIME-<version>.pkg` từ GitHub Releases, bấm đúp → Continue → Install, rồi chọn VietIME trong menu bàn phím. Gỡ: menu "Vi" → "Gỡ cài đặt VietIME…". Bật/tắt nhanh: Ctrl+Shift.
+
+## Tài liệu
+
+- [Trang chủ](https://phuongvudev.github.io/VietIME/): giới thiệu, tính năng, cách cài, hỏi đáp
+- [Hướng dẫn sử dụng](https://phuongvudev.github.io/VietIME/HUONG_DAN_SU_DUNG.html): bảng phím Telex/VNI, gõ code, sửa dấu tại chỗ, chế độ theo app, menu, từ điển ngoại lệ, gỡ cài đặt, xử lý sự cố
+- [README](https://github.com/phuongvudev/VietIME#readme): giới thiệu và cài đặt
+
+## Tải về
+
+- [Bản mới nhất (GitHub Releases)](https://github.com/phuongvudev/VietIME/releases/latest)
+
+## Mã nguồn
+
+- [Repository](https://github.com/phuongvudev/VietIME): lõi engine viết bằng C (Telex/VNI, đặt dấu, kiểm tra chính tả, nhận biết comment/chuỗi), app InputMethodKit viết bằng Swift

@@ -1,0 +1,7 @@
+# GitHub Pages (Jekyll): docs/index.html là trang chủ, các file .md được tự chuyển thành .html
+title: VietIME
+description: Bộ gõ tiếng Việt cho macOS — Telex/VNI, không gạch chân, gõ code vẫn giữ suggestion của editor.
+lang: vi
+theme: jekyll-theme-primer
+exclude:
+  - images/README.md

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VietIME — Bộ gõ tiếng Việt cho macOS, gõ code vẫn giữ gợi ý</title>
+<meta name="description" content="VietIME là bộ gõ tiếng Việt miễn phí cho Mac, hỗ trợ Telex và VNI. Không gạch chân khi gõ, giữ nguyên từ khoá khi viết code, vẫn gõ được tiếng Việt trong comment và chuỗi, sửa dấu tại chỗ. Chạy trên macOS 12 trở lên, Apple Silicon và Intel.">
+<meta name="keywords" content="bộ gõ tiếng Việt macOS, gõ tiếng Việt trên Mac, Telex macOS, VNI macOS, bộ gõ tiếng Việt cho lập trình viên, Vietnamese input method macOS, Vietnamese keyboard Mac">
+<link rel="canonical" href="https://phuongvudev.github.io/VietIME/">
+<meta name="robots" content="index, follow">
+<!-- Google Search Console: dán thẻ xác minh vào đây, ví dụ
+<meta name="google-site-verification" content="...">
+-->
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:site_name" content="VietIME">
+<meta property="og:title" content="VietIME — Bộ gõ tiếng Việt cho macOS">
+<meta property="og:description" content="Telex & VNI, không gạch chân, gõ code vẫn giữ suggestion của editor. Miễn phí, macOS 12+.">
+<meta property="og:url" content="https://phuongvudev.github.io/VietIME/">
+<meta property="og:image" content="https://phuongvudev.github.io/VietIME/images/installer-welcome.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "VietIME",
+  "alternateName": "Bộ gõ tiếng Việt VietIME",
+  "description": "Bộ gõ tiếng Việt cho macOS hỗ trợ Telex và VNI, thiết kế để gõ code vẫn giữ được gợi ý của editor.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "macOS 12 or later",
+  "softwareVersion": "0.3.1",
+  "inLanguage": "vi",
+  "url": "https://phuongvudev.github.io/VietIME/",
+  "downloadUrl": "https://github.com/phuongvudev/VietIME/releases/latest",
+  "codeRepository": "https://github.com/phuongvudev/VietIME",
+  "author": { "@type": "Person", "name": "Vũ Phương", "url": "https://github.com/phuongvudev" },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "VietIME có miễn phí không?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Có. VietIME miễn phí, tải file .pkg từ trang Releases trên GitHub." } },
+    { "@type": "Question", "name": "VietIME chạy trên macOS nào?",
+      "acceptedAnswer": { "@type": "Answer", "text": "macOS 12 Monterey trở lên, trên cả máy Apple Silicon và Intel." } },
+    { "@type": "Question", "name": "Gõ code bằng VietIME có bị lỗi gợi ý trong VS Code không?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Không. VietIME thay chữ trực tiếp thay vì dùng chữ gạch chân, nên gợi ý của editor và phím Tab/Enter vẫn hoạt động. Từ khoá như class, useEffect, if được giữ nguyên, còn trong comment và chuỗi vẫn gõ tiếng Việt được." } },
+    { "@type": "Question", "name": "Làm sao để sửa dấu một từ đã gõ?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Đặt con trỏ ngay sau hoặc giữa từ rồi gõ phím dấu, ví dụ việt + s thành viết, không cần xoá cả từ." } },
+    { "@type": "Question", "name": "Gỡ VietIME như thế nào?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Bấm biểu tượng Vi trên thanh menu và chọn Gỡ cài đặt VietIME." } }
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1f; --muted: #5f5f66; --line: #e4e1da;
+    --card: #ffffff; --accent: #c8102e; --accent-ink: #fff; --code: #f3f1ec;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #141416; --fg: #f2f2f4; --muted: #a3a3ab; --line: #2c2c31;
+            --card: #1c1c20; --code: #222227; --accent: #ff4d5e; --accent-ink: #141416; }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif; }
+  a { color: inherit; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  header { padding: 20px 0; }
+  header .wrap { display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; }
+  .logo b { display: inline-grid; place-items: center; width: 30px; height: 24px; border: 2px solid currentColor;
+            border-radius: 6px; font-size: 13px; }
+  nav a { margin-left: 20px; color: var(--muted); text-decoration: none; font-size: 15px; }
+  nav a:hover { color: var(--fg); }
+
+  .hero { padding-top: 56px; padding-bottom: 40px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  h1 { font-size: clamp(34px, 5vw, 52px); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 18px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { font-size: 19px; color: var(--muted); margin: 0 0 28px; max-width: 34em; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 999px;
+         font-weight: 600; text-decoration: none; border: 1px solid var(--line); }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+  .btn:hover { filter: brightness(1.05); }
+  .meta { font-size: 14px; color: var(--muted); margin-top: 14px; }
+
+  .typing { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+            font: 15px/1.7 ui-monospace, "SF Mono", Menlo, monospace; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+  .typing .row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
+  .typing .k { color: var(--muted); }
+  .typing .arrow { color: var(--muted); }
+  .typing .v { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; }
+  .typing hr { border: 0; border-top: 1px dashed var(--line); margin: 12px 0; }
+
+  section { padding: 48px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 28px; letter-spacing: -0.01em; margin: 0 0 24px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  .card h3 { font-size: 17px; margin: 0 0 6px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  pre { background: var(--code); border-radius: var(--radius); padding: 18px 20px; overflow-x: auto;
+        font: 14px/1.7 ui-monospace, "SF Mono", Menlo, monospace; margin: 0; }
+  pre .c { color: #2f8f46; } pre .s { color: #b5532a; } pre .kw { color: #7a3fd1; }
+  @media (prefers-color-scheme: dark) { pre .c { color: #6fd08a; } pre .s { color: #f0a072; } pre .kw { color: #c29bff; } }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+  ol.steps li { counter-increment: s; position: relative; padding: 0 0 18px 44px; }
+  ol.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 30px; height: 30px;
+                        border-radius: 50%; background: var(--fg); color: var(--bg); display: grid; place-items: center;
+                        font-weight: 700; font-size: 14px; }
+  .shot { width: 100%; height: auto; border-radius: var(--radius); border: 1px solid var(--line); }
+  kbd { font: 13px ui-monospace, Menlo, monospace; border: 1px solid var(--line); border-bottom-width: 2px;
+        border-radius: 5px; padding: 1px 6px; background: var(--card); }
+  code { font: 0.92em ui-monospace, Menlo, monospace; background: var(--code); padding: 1px 6px; border-radius: 5px; }
+
+  details { border-bottom: 1px solid var(--line); padding: 14px 0; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { color: var(--muted); margin: 8px 0 0; }
+
+  footer { padding: 32px 0 48px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+
+  @media (max-width: 820px) {
+    .hero, .split { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: 1fr; }
+    nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="./"><b>Vi</b> VietIME</a>
+    <nav>
+      <a href="#tinh-nang">Tính năng</a>
+      <a href="#go-code">Gõ code</a>
+      <a href="#cai-dat">Cài đặt</a>
+      <a href="#hoi-dap">Hỏi đáp</a>
+      <a href="https://github.com/phuongvudev/VietIME">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <h1>Bộ gõ tiếng Việt cho Mac, <em>gõ code không vướng</em>.</h1>
+      <p class="lead">VietIME hỗ trợ Telex và VNI, không gạch chân khi gõ. Trong VS Code, Xcode hay JetBrains, gợi ý của editor vẫn hiện bình thường, từ khoá được giữ nguyên, còn comment và chuỗi vẫn gõ tiếng Việt được.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/phuongvudev/VietIME/releases/latest">⬇ Tải VietIME miễn phí</a>
+        <a class="btn" href="HUONG_DAN_SU_DUNG.html">Hướng dẫn sử dụng</a>
+      </div>
+      <p class="meta">macOS 12 trở lên · Apple Silicon &amp; Intel · Ký bằng Apple Developer ID</p>
+    </div>
+    <div class="typing" aria-label="Ví dụ gõ Telex">
+      <div class="row"><span class="k">tieengs Vieetj</span><span class="arrow">→</span><span class="v">tiếng Việt</span></div>
+      <div class="row"><span class="k">nguoiwf</span><span class="arrow">→</span><span class="v">người</span></div>
+      <div class="row"><span class="k">dduowcj</span><span class="arrow">→</span><span class="v">được</span></div>
+      <hr>
+      <div class="row"><span class="k">useEffect</span><span class="arrow">→</span><span class="v">useEffect</span></div>
+      <div class="row"><span class="k">texxt</span><span class="arrow">→</span><span class="v">text</span></div>
+      <div class="row"><span class="k">việt| + s</span><span class="arrow">→</span><span class="v">viết</span></div>
+    </div>
+  </div>
+
+  <section id="tinh-nang">
+    <div class="wrap">
+      <h2>Tính năng</h2>
+      <div class="grid">
+        <div class="card"><h3>Không gạch chân</h3><p>Chữ được thay trực tiếp. Popup gợi ý, Tab/Enter chọn gợi ý và tự đóng ngoặc vẫn chạy như khi gõ tiếng Anh.</p></div>
+        <div class="card"><h3>Hiểu code</h3><p>Giữ nguyên <code>class</code>, <code>useEffect</code>, <code>if</code>, <code>max</code>. Trong comment và chuỗi thì tự gõ tiếng Việt.</p></div>
+        <div class="card"><h3>Sửa dấu tại chỗ</h3><p>Đặt con trỏ vào từ đã gõ rồi gõ phím dấu: <code>việt</code> + <kbd>s</kbd> → viết. Không phải xoá cả từ.</p></div>
+        <div class="card"><h3>Gõ tự do</h3><p>Dấu gõ ở cuối từ đều được: <code>vietej</code>, <code>nguoiwf</code>. Chọn kiểu dấu mới (hoà) hoặc cũ (hòa).</p></div>
+        <div class="card"><h3>Theo từng app</h3><p>Mỗi app nhớ chế độ riêng. Bấm <kbd>Ctrl</kbd>+<kbd>Shift</kbd> để bật/tắt tiếng Việt cho app đang dùng.</p></div>
+        <div class="card"><h3>Cài &amp; gỡ dễ</h3><p>Cài bằng file <code>.pkg</code>, không cần log out. Gỡ ngay trong menu bộ gõ.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="go-code">
+    <div class="wrap split">
+      <div>
+        <h2>Gõ code và tiếng Việt trong cùng một file</h2>
+        <p>Ở đầu mỗi từ, VietIME đọc đoạn text trước con trỏ để biết bạn đang ở code, comment hay chuỗi. Ở code thì từ khoá được giữ nguyên. Ở comment và chuỗi thì bỏ dấu bình thường.</p>
+        <p>Nếu bộ gõ đoán sai: gõ thêm <kbd>z</kbd> để ép bỏ dấu (<code>maxz</code> → mã), hoặc gõ lặp phím dấu để giữ tiếng Anh (<code>maxx</code> → max).</p>
+      </div>
+<pre><span class="c">// Lấy danh sách đơn hàng, tối đa 10 mã</span>
+<span class="kw">const</span> maxItems = 10;
+<span class="kw">export async function</span> fetchOrders(userId) {
+  <span class="kw">if</span> (!userId) <span class="kw">return</span> [];
+  <span class="kw">throw new</span> Error(<span class="s">"Mã đơn hàng không hợp lệ"</span>);
+}</pre>
+    </div>
+  </section>
+
+  <section id="cai-dat">
+    <div class="wrap split">
+      <div>
+        <h2>Cài đặt trong 1 phút</h2>
+        <ol class="steps">
+          <li>Tải file <b>VietIME-&lt;phiên bản&gt;.pkg</b> ở trang <a href="https://github.com/phuongvudev/VietIME/releases/latest">Releases</a>.</li>
+          <li>Bấm đúp, chọn <b>Continue</b> → <b>Install</b> rồi nhập mật khẩu máy.</li>
+          <li>Bấm biểu tượng bàn phím trên thanh menu và chọn <b>VietIME</b>. Đổi bộ gõ nhanh bằng <kbd>Ctrl</kbd>+<kbd>Space</kbd>.</li>
+        </ol>
+        <p class="meta">Chưa thấy VietIME? Vào System Settings → Keyboard → Input Sources → Edit… → <b>+</b> → Vietnamese → VietIME.</p>
+      </div>
+      <img class="shot" src="images/installer-welcome.png" width="1200" height="918" loading="lazy"
+           alt="Trình cài đặt VietIME trên macOS">
+    </div>
+  </section>
+
+  <section id="hoi-dap">
+    <div class="wrap">
+      <h2>Hỏi đáp</h2>
+      <details><summary>VietIME có miễn phí không?</summary><p>Có. Tải file .pkg từ trang Releases trên GitHub.</p></details>
+      <details><summary>Chạy trên macOS nào?</summary><p>macOS 12 Monterey trở lên, trên cả máy Apple Silicon và Intel.</p></details>
+      <details><summary>Gõ code trong VS Code có bị mất gợi ý không?</summary><p>Không. VietIME thay chữ trực tiếp thay vì dùng chữ gạch chân, nên gợi ý của editor và phím Tab/Enter vẫn hoạt động.</p></details>
+      <details><summary>Tôi quen gõ Telex/VNI như Unikey, có dùng được không?</summary><p>Được. Quy tắc Telex và VNI quen thuộc, kèm gõ tự do, tự đặt dấu đúng chỗ và tự khôi phục từ tiếng Anh.</p></details>
+      <details><summary>Chọn VietIME mà không gõ được?</summary><p>Vào Input Sources, xoá mọi mục VietIME, log out rồi log in lại, sau đó thêm VietIME lại.</p></details>
+      <details><summary>Gỡ cài đặt thế nào?</summary><p>Bấm biểu tượng <b>Vi</b> trên thanh menu → <b>Gỡ cài đặt VietIME…</b></p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    VietIME · <a href="https://github.com/phuongvudev/VietIME">Mã nguồn trên GitHub</a> · <a href="HUONG_DAN_SU_DUNG.html">Hướng dẫn sử dụng</a> · Tác giả <a href="https://github.com/phuongvudev">Vũ Phương</a><br>
+    "UniKey" là tên của tác giả Phạm Kim Long. VietIME là một dự án độc lập, viết mới hoàn toàn.
+  </div>
+</footer>
+</body>
+</html>

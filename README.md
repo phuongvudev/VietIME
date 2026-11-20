@@ -2,6 +2,10 @@
 
 Bộ gõ tiếng Việt cho macOS, hỗ trợ **Telex** và **VNI**, được thiết kế để **gõ code vẫn giữ được gợi ý (suggestion) của editor**.
 
+🌐 **Trang chủ:** https://phuongvudev.github.io/VietIME/ · ⬇ **Tải về:** [bản mới nhất](https://github.com/phuongvudev/VietIME/releases/latest)
+
+*VietIME is a free Vietnamese input method (IME) for macOS, supporting Telex and VNI. It types without underlined text, so editor suggestions in VS Code, Xcode and JetBrains keep working while you code.*
+
 <p align="center">
   <img src="docs/images/installer-welcome.png" width="560" alt="Trình cài đặt VietIME">
 </p>
