@@ -12,3 +12,10 @@ VietIME.xcodeproj/
 
 # Python
 __pycache__/
+
+# Script build / đóng gói / phát hành và tài liệu dev — chỉ giữ trên máy, không đưa lên repo
+scripts/
+installer/
+tools/
+docs/PHAT_HANH.md
+docs/PHAT_TRIEN.md
