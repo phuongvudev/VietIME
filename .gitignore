@@ -1,0 +1,14 @@
+# Build
+build/
+dist/
+DerivedData/
+VietIME.xcodeproj/
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
+._*
+
+# Python
+__pycache__/

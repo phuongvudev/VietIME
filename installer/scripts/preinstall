@@ -1,0 +1,15 @@
+#!/bin/bash
+# Chạy với quyền root trước khi chép file: tắt bản đang chạy, xoá bản cài kiểu dev trong home
+# (tránh hiện 2 VietIME trong Input Sources).
+USER_NAME=$(stat -f%Su /dev/console)
+HOME_DIR=$(dscl . -read "/Users/$USER_NAME" NFSHomeDirectory 2>/dev/null | awk '{print $2}')
+killall VietIME 2>/dev/null || true
+# Dọn rác "._*" từ gói bị lỗi của bản 0.3.0
+rm -rf "/Library/Input Methods/._VietIME.app"
+rm -rf "/Library/Input Methods/VietIME.app"
+if [[ -n "$HOME_DIR" && -d "$HOME_DIR/Library/Input Methods/VietIME.app" ]]; then
+  rm -rf "$HOME_DIR/Library/Input Methods/VietIME.app"
+fi
+# Biên nhận của bản cũ (bundle ID cũ)
+pkgutil --forget com.vuphuong.inputmethod.VietIME.pkg >/dev/null 2>&1 || true
+exit 0
