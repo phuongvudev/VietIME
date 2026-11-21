@@ -50,11 +50,64 @@ enum Uninstaller {
     static let oldBundleID = "com.vuphuong.inputmethod.VietIME"
 
     static func setInputSourceEnabled(_ enabled: Bool, bundleID: String = Uninstaller.bundleID) {
-        let props = [kTISPropertyBundleID as String: bundleID] as CFDictionary
-        guard let list = TISCreateInputSourceList(props, true)?.takeRetainedValue() as? [TISInputSource] else { return }
-        for src in list {
+        for src in inputSources(bundleID: bundleID) {
             _ = enabled ? TISEnableInputSource(src) : TISDisableInputSource(src)
         }
+    }
+
+    /// Mọi input source thuộc bundle (kể cả chưa bật).
+    static func inputSources(bundleID: String = Uninstaller.bundleID) -> [TISInputSource] {
+        let props = [kTISPropertyBundleID as String: bundleID] as CFDictionary
+        return TISCreateInputSourceList(props, true)?.takeRetainedValue() as? [TISInputSource] ?? []
+    }
+
+    private static func boolProperty(_ src: TISInputSource, _ key: CFString) -> Bool {
+        guard let raw = TISGetInputSourceProperty(src, key) else { return false }
+        return CFBooleanGetValue(Unmanaged<CFBoolean>.fromOpaque(raw).takeUnretainedValue())
+    }
+
+    /// Đăng ký bộ gõ với hệ thống và bật nó trong Input Sources, để dùng được ngay sau khi cài,
+    /// không phải log out. Trả false nếu hệ thống vẫn chưa thấy bộ gõ.
+    ///
+    /// Vì sao cần chờ: ngay sau TISRegisterInputSource, danh sách input source của tiến trình có thể
+    /// chưa cập nhật. Nếu tìm ngay, danh sách rỗng → không bật được gì → người dùng phải log out
+    /// mới thấy VietIME trong System Settings.
+    @discardableResult
+    static func register(select: Bool) -> Bool {
+        let url = Bundle.main.bundleURL as CFURL
+        var status = TISRegisterInputSource(url)
+        print("TISRegisterInputSource(\(Bundle.main.bundlePath)): \(status == noErr ? "OK" : "lỗi \(status)")")
+
+        var sources: [TISInputSource] = []
+        for attempt in 1...30 {                       // chờ tối đa ~6 giây
+            sources = inputSources()
+            if !sources.isEmpty { break }
+            if attempt == 10 {                        // thử đăng ký lại một lần
+                status = TISRegisterInputSource(url)
+                print("Đăng ký lại: \(status == noErr ? "OK" : "lỗi \(status)")")
+            }
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.2))
+        }
+        guard !sources.isEmpty else {
+            print("❌ Hệ thống chưa thấy bộ gõ \(bundleID) — cần log out rồi log in lại.")
+            return false
+        }
+
+        for src in sources where boolProperty(src, kTISPropertyInputSourceIsEnableCapable) {
+            let st = TISEnableInputSource(src)
+            print("Bật input source: \(st == noErr ? "OK" : "lỗi \(st)")")
+        }
+        // Tắt bộ gõ của bản cũ (bundle ID cũ) để không hiện 2 VietIME
+        setInputSourceEnabled(false, bundleID: oldBundleID)
+
+        if select, let src = sources.first(where: { boolProperty($0, kTISPropertyInputSourceIsSelectCapable) }) {
+            let st = TISSelectInputSource(src)
+            print("Chọn VietIME làm bộ gõ hiện tại: \(st == noErr ? "OK" : "lỗi \(st)")")
+        }
+
+        let enabled = inputSources().contains { boolProperty($0, kTISPropertyInputSourceIsEnabled) }
+        print(enabled ? "✅ VietIME đã có trong Input Sources." : "⚠️ Đã đăng ký nhưng chưa bật được VietIME.")
+        return enabled
     }
 
     /// Chạy AppleScript, trả về kết quả (nil nếu lỗi / người dùng bấm Huỷ).

@@ -2,15 +2,11 @@ import Cocoa
 import Carbon
 import InputMethodKit
 
-// `VietIME --register`: đăng ký & bật bộ gõ ngay, không cần log out (scripts/install.sh gọi).
+// `VietIME --register [--select]`: đăng ký & bật bộ gõ ngay, không cần log out.
+// Gọi bởi postinstall của bộ cài .pkg và scripts/install.sh, chạy với quyền của người dùng.
 if CommandLine.arguments.contains("--register") {
-    let status = TISRegisterInputSource(Bundle.main.bundleURL as CFURL)
-    print(status == noErr ? "Đã đăng ký bộ gõ." : "TISRegisterInputSource lỗi \(status)")
-    Uninstaller.setInputSourceEnabled(true)
-    // Tắt bộ gõ của bản cũ (bundle ID cũ) để không hiện 2 VietIME
-    Uninstaller.setInputSourceEnabled(false, bundleID: Uninstaller.oldBundleID)
-    print("Đã bật bộ gõ trong Input Sources.")
-    exit(0)
+    let ok = Uninstaller.register(select: CommandLine.arguments.contains("--select"))
+    exit(ok ? 0 : 1)
 }
 
 // `VietIME --disable`: tắt bộ gõ khỏi Input Sources (scripts/uninstall.sh gọi trước khi xoá).
